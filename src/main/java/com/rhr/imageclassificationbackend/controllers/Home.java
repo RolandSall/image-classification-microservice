@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/home")
 public class Home {
 
     private final RestTemplate restTemplate;
