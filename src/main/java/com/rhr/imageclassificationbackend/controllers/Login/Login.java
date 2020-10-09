@@ -1,5 +1,4 @@
 package com.rhr.imageclassificationbackend.controllers.Login;
-
 import com.rhr.imageclassificationbackend.model.Admin;
 import com.rhr.imageclassificationbackend.model.User;
 import com.rhr.imageclassificationbackend.services.Admin.AdminService;
@@ -23,7 +22,7 @@ public class Login {
         this.adminService = adminService;
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/admin/signIn")
     public ResponseEntity signInAsAdmin(@RequestBody UserAndAdminApiRequest request) {
         try {
             Admin admin = adminService.findAdminByUsernameAndPassword(getUserName(request), getPassword(request));
