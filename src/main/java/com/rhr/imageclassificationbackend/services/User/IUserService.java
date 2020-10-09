@@ -4,7 +4,7 @@ import com.rhr.imageclassificationbackend.model.User;
 
 public interface IUserService {
 
-    User findUserByUsernameAndPassword(String username, String password);
+    User findUserByUsernameAndPassword(String username, String password) throws Exception;
 
     User createUser(User user) throws Exception;
 }

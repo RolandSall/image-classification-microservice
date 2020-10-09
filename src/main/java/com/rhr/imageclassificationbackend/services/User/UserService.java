@@ -16,8 +16,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findUserByUsernameAndPassword(String username, String password) {
-        return iUserRepositoryDAO.findByUsernameAndPassword(username, password);
+    public User findUserByUsernameAndPassword(String username, String password) throws Exception {
+        User user = iUserRepositoryDAO.findByUsernameAndPassword(username, password);
+        if(user != null){
+            return user;
+        } else{
+            throw new Exception("User Not Found!");
+        }
     }
 
     @Override
