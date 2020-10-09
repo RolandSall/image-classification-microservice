@@ -17,11 +17,29 @@ public class UserService implements IUserService {
 
     @Override
     public User findUserByUsernameAndPassword(String username, String password) {
-        return iUserRepositoryDAO.findByUsernameAndPassword(username,password);
+        return iUserRepositoryDAO.findByUsernameAndPassword(username, password);
     }
 
     @Override
-    public User createUser(User user) {
-        return  iUserRepositoryDAO.save(user);
+    public User createUser(User user) throws Exception {
+        if (isValidUserName(user.getUsername())) {
+            throw new Exception("Username Already Exist");
+        } else if (isValidEmail(user.getEmail())) {
+            throw new Exception("Email Already Exist");
+        } else {
+            return iUserRepositoryDAO.save(user);
+        }
+    }
+
+    private boolean isValidUserName(String username){
+        if (iUserRepositoryDAO.findByUsername(username) == null)
+            return false;
+        return true;
+    }
+
+    private boolean isValidEmail(String email){
+        if (iUserRepositoryDAO.findByEmail(email) == null)
+            return false;
+        return true;
     }
 }

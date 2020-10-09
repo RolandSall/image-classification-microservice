@@ -28,7 +28,7 @@ public class Login {
             UserApiResponse response = getUserApiResponse(user);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-           return ResponseEntity.status(HttpStatus.NOT_EXTENDED).body(e.getMessage());
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -39,7 +39,7 @@ public class Login {
             UserApiResponse response = getUserApiResponse(user);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_EXTENDED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -48,7 +48,6 @@ public class Login {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .username(request.getUsername())
-                .userId(request.getUserId())
                 .address(request.getAddress())
                 .email(request.getEmail())
                 .gender(request.getGender())
@@ -73,11 +72,11 @@ public class Login {
     }
 
     private String getUserPassword(UserSignInApiRequest request) {
-        return request.getUsername();
+        return request.getPassword();
     }
 
     private String getUserName(UserSignInApiRequest request) {
-        return request.getPassword();
+        return request.getUsername();
     }
 
 

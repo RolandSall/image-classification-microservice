@@ -8,6 +8,8 @@ import java.util.UUID;
 public interface IUserRepositoryDAO extends JpaRepository<User, UUID> {
 
     User findByUsernameAndPassword(String userName, String password);
+    User findByUsername(String userName);
+    User findByEmail(String email);
 
 
 }

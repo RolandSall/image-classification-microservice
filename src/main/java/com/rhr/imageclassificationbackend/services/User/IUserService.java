@@ -6,5 +6,5 @@ public interface IUserService {
 
     User findUserByUsernameAndPassword(String username, String password);
 
-    User createUser(User user);
+    User createUser(User user) throws Exception;
 }

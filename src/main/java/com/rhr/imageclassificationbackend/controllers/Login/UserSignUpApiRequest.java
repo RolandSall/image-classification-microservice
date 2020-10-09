@@ -10,7 +10,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class UserSignUpApiRequest {
-    private UUID userId;
     private String firstName;
     private String lastName;
     private String phoneNumber;
