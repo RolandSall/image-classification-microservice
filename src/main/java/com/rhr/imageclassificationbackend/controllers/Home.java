@@ -1,5 +1,4 @@
 package com.rhr.imageclassificationbackend.controllers;
-
 import com.rhr.imageclassificationbackend.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,9 +20,11 @@ public class Home {
     }
 
     @GetMapping
-    public ResponseEntity<Message> test(){
+    public ResponseEntity<Message> test() {
         ResponseEntity<Message> message = restTemplate.getForEntity("http://localhost:5000/", Message.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(message.getBody());
     }
+
+
 }
