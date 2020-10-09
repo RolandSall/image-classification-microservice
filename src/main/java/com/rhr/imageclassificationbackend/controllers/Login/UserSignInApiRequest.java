@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserApiRequest {
+public class UserSignInApiRequest {
     private String username;
     private String password;
 }

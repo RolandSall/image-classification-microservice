@@ -5,7 +5,6 @@ import com.rhr.imageclassificationbackend.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +22,7 @@ public class Login {
 
 
     @PostMapping("/signIn")
-    public ResponseEntity signUp(@RequestBody UserApiRequest request) {
+    public ResponseEntity signIn(@RequestBody UserSignInApiRequest request) {
         try {
             User user = userService.findUserByUsernameAndPassword(getUserName(request), getUserPassword(request));
             UserApiResponse response = getUserApiResponse(user);
@@ -31,6 +30,31 @@ public class Login {
         } catch (Exception e) {
            return ResponseEntity.status(HttpStatus.NOT_EXTENDED).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/signUp")
+    public ResponseEntity signUp(@RequestBody UserSignUpApiRequest request) {
+        try {
+            User user = userService.createUser(getUser(request));
+            UserApiResponse response = getUserApiResponse(user);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_EXTENDED).body(e.getMessage());
+        }
+    }
+
+    private User getUser(UserSignUpApiRequest request) {
+        return new User().builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .username(request.getUsername())
+                .userId(request.getUserId())
+                .address(request.getAddress())
+                .email(request.getEmail())
+                .gender(request.getGender())
+                .password(request.getPassword())
+                .phoneNumber(request.getPhoneNumber())
+                .build();
     }
 
     private UserApiResponse getUserApiResponse(User user) {
@@ -48,11 +72,11 @@ public class Login {
 
     }
 
-    private String getUserPassword(UserApiRequest request) {
+    private String getUserPassword(UserSignInApiRequest request) {
         return request.getUsername();
     }
 
-    private String getUserName(UserApiRequest request) {
+    private String getUserName(UserSignInApiRequest request) {
         return request.getPassword();
     }
 

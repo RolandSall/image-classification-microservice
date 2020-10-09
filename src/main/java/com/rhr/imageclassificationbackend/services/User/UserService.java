@@ -17,6 +17,11 @@ public class UserService implements IUserService {
 
     @Override
     public User findUserByUsernameAndPassword(String username, String password) {
-        return null;
+        return iUserRepositoryDAO.findByUsernameAndPassword(username,password);
+    }
+
+    @Override
+    public User createUser(User user) {
+        return  iUserRepositoryDAO.save(user);
     }
 }
