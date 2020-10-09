@@ -3,6 +3,7 @@ package com.rhr.imageclassificationbackend.controllers.Login;
 import com.rhr.imageclassificationbackend.model.User;
 import com.rhr.imageclassificationbackend.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-
 public class Login {
 
     private UserService userService;
@@ -28,7 +28,7 @@ public class Login {
             UserApiResponse response = getUserApiResponse(user);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
