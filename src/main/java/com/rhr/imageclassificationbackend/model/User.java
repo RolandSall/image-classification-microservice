@@ -1,6 +1,13 @@
 package com.rhr.imageclassificationbackend.model;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -8,8 +15,17 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
+@Entity
 public class User {
-    private  int customerId;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(updatable = false, nullable = false)
+    private UUID customerId;
+
     private String customerFirstName;
     private String customerLastName;
     private String customerPhone;
