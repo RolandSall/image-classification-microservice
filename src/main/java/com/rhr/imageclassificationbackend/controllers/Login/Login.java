@@ -1,9 +1,10 @@
 package com.rhr.imageclassificationbackend.controllers.Login;
 
+import com.rhr.imageclassificationbackend.model.Admin;
 import com.rhr.imageclassificationbackend.model.User;
+import com.rhr.imageclassificationbackend.services.Admin.AdminService;
 import com.rhr.imageclassificationbackend.services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,17 +15,29 @@ import org.springframework.web.bind.annotation.RestController;
 public class Login {
 
     private UserService userService;
+    private AdminService adminService;
 
     @Autowired
-    public Login(UserService userService) {
+    public Login(UserService userService, AdminService adminService) {
         this.userService = userService;
+        this.adminService = adminService;
     }
 
+    @PostMapping("/signIn")
+    public ResponseEntity signInAsAdmin(@RequestBody UserAndAdminApiRequest request) {
+        try {
+            Admin admin = adminService.findAdminByUsernameAndPassword(getUserName(request), getPassword(request));
+            AdminApiResponse response = getAdminApiResponse(admin);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
     @PostMapping("/signIn")
-    public ResponseEntity signIn(@RequestBody UserSignInApiRequest request) {
+    public ResponseEntity signInAsUser(@RequestBody UserAndAdminApiRequest request) {
         try {
-            User user = userService.findUserByUsernameAndPassword(getUserName(request), getUserPassword(request));
+            User user = userService.findUserByUsernameAndPassword(getUserName(request), getPassword(request));
             UserApiResponse response = getUserApiResponse(user);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
@@ -71,14 +84,24 @@ public class Login {
 
     }
 
-    private String getUserPassword(UserSignInApiRequest request) {
+    private AdminApiResponse getAdminApiResponse(Admin admin) {
+        return new AdminApiResponse().builder()
+                .adminId(admin.getAdminId())
+                .username(admin.getUsername())
+                .password(admin.getPassword())
+                .email(admin.getEmail())
+                .build();
+
+    }
+
+
+    private String getPassword(UserAndAdminApiRequest request) {
         return request.getPassword();
     }
 
-    private String getUserName(UserSignInApiRequest request) {
+    private String getUserName(UserAndAdminApiRequest request) {
         return request.getUsername();
     }
 
 
 }
-
