@@ -24,14 +24,14 @@ public class User {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(updatable = false, nullable = false)
-    private UUID customerId;
+    private UUID userId;
 
-    private String customerFirstName;
-    private String customerLastName;
-    private String customerPhone;
-    private String customerEmail;
-    private String customerGender;
-    private String customerAddress;
-    private String customerUsername;
-    private String customerPassword;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String email;
+    private String gender;
+    private String address;
+    private String username;
+    private String password;
 }
