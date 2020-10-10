@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface IAdminRepositoryDAO extends JpaRepository<Admin, UUID> {
 
     Admin findByUsernameAndPassword(String username, String password);
+
+
 }

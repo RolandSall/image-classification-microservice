@@ -29,7 +29,7 @@ public class Login {
             AdminApiResponse response = getAdminApiResponse(admin);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ public class Login {
             UserApiResponse response = getUserApiResponse(user);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -92,7 +92,6 @@ public class Login {
                 .build();
 
     }
-
 
     private String getPassword(UserAndAdminApiRequest request) {
         return request.getPassword();
