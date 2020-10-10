@@ -31,17 +31,17 @@ public class File {
             HttpEntity<String> entity = new HttpEntity<>(requestJson,headers);
             String answer = restTemplate.postForObject(url, entity, String.class);
             System.out.println(answer);
-            // FileApiResponse response = buildResponse(answer);
-            return ResponseEntity.status(HttpStatus.OK).body("ADS");
+            FileApiResponse response = buildResponse(request.getPath(),answer);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
-    private FileApiResponse buildResponse(String path) {
+    private FileApiResponse buildResponse(String path, String output) {
         return new FileApiResponse().builder()
                 .path(path)
-                .output("Dummy Response")
+                .output(output)
                 .build();
     }
 }
