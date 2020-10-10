@@ -9,4 +9,6 @@ import lombok.*;
 @Builder
 public class Message {
     private String message;
+    private String output;
 }
+

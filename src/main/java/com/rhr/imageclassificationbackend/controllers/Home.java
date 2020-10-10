@@ -21,7 +21,7 @@ public class Home {
 
     @GetMapping
     public ResponseEntity<Message> test() {
-        ResponseEntity<Message> message = restTemplate.getForEntity("http://localhost:5000/", Message.class);
+        ResponseEntity<Message> message = restTemplate.getForEntity("http://localhost:5000/message", Message.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(message.getBody());
     }
