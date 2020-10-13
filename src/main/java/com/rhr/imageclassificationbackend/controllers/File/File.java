@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/upload/file")
 public class File {
 
-    public static final String HTTP_LOCALHOST_5000_PREDICT = "http://localhost:5000/predict";
+    public static final String MODEL_PYTHON_SERVICE_ENDPOINT = "http://localhost:5000/predict";
     private final RestTemplate restTemplate;
 
     @Autowired
@@ -22,20 +22,29 @@ public class File {
     @PostMapping
     public ResponseEntity uploadImage(@RequestBody FileApiRequest request){
         try {
-            String modifiedPath = request.getPath().replaceAll("\\\\","\\\\\\\\");
-            String url = HTTP_LOCALHOST_5000_PREDICT;
-            String requestJson = "{\"path\": " + "\"" + modifiedPath + "\"" +"}";
+            String modifiedPath = getModifiedPath(request);
+            String url = MODEL_PYTHON_SERVICE_ENDPOINT;
+            String requestJson = buildJsonFromRequest(modifiedPath);
             System.out.println(requestJson);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<>(requestJson,headers);
             String answer = restTemplate.postForObject(url, entity, String.class);
-            System.out.println(answer);
             FileApiResponse response = buildResponse(request.getPath(),answer);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+
+    private String buildJsonFromRequest(String modifiedPath) {
+        return "{\"path\": " + "\"" + modifiedPath + "\"" + "}";
+    }
+
+
+    private String getModifiedPath(FileApiRequest request) {
+        return request.getPath().replaceAll("\\\\", "\\\\\\\\");
     }
 
     private FileApiResponse buildResponse(String path, String output) {
