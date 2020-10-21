@@ -9,10 +9,9 @@ services:
       - MYSQL_PASSWORD=password
 
   spring-boot:
-    image: spring-boot-imageclassification-main-microservice
+    image: imageclassification-main-microservice
     ports:
       [8080:8080]
-
     build:
       context: ./
       dockerfile: Dockerfile
