@@ -8,6 +8,9 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=password
 
+    volumes:
+    - imageclassificationbackend:/var/lib/mysql
+
   spring-boot:
     image: imageclassification-main-microservice
     ports:
@@ -19,3 +22,5 @@ services:
     depends_on:
         - mysql-standalone
 
+volumes:
+  imageclassificationbackend:
