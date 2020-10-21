@@ -1,24 +1,22 @@
-# spring-boot-docker/docker-compose.yml
-version: "3.7"
+version: '3'
 services:
-  mysql-service:
+  mysql-standalone:
     image: mysql:latest
-    networks:
-      - spring-boot-mysql-network
-    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=imageclassification
-  web-service:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+
+  spring-boot:
+    image: spring-boot-imageclassification-main-microservice
+    ports:
+      [8080:8080]
+
     build:
       context: ./
       dockerfile: Dockerfile
-    ports:
-      - "4000:4000"
-    networks:
-      - spring-boot-mysql-network
+
     depends_on:
-      - mysql-service
-networks:
-  spring-boot-mysql-network:
-    driver: bridge
+        - mysql-standalone
+
