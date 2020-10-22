@@ -5,3 +5,4 @@ create table if not exists admin
     password varchar(255) null,
     username varchar(255) null
 );
+
