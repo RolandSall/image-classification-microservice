@@ -20,10 +20,11 @@ public class Home {
     }
 
     @GetMapping
-    public ResponseEntity<Message> test() {
-        ResponseEntity<Message> message = restTemplate.getForEntity("http://d07e56dc65f9.ngrok.io/", Message.class);
+    public String test() {
 
-        return ResponseEntity.status(HttpStatus.OK).body(message.getBody());
+        //ResponseEntity<Message> message = restTemplate.getForEntity("http://d07e56dc65f9.ngrok.io/", Message.class);
+        return "Hello I am running in a docker container !";
+        // return ResponseEntity.status(HttpStatus.OK).body(message.getBody());
     }
 
 
