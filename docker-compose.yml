@@ -5,7 +5,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=imageclassification
-
+    ports:
+    - [3306:3306]
     volumes:
     - imageclassificationbackend:/var/lib/mysql
 
