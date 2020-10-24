@@ -1,6 +1,8 @@
 package com.rhr.imageclassificationbackend.controllers.modelParam;
 
+import com.rhr.imageclassificationbackend.model.ModelParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,20 @@ public class ModelParameter {
 
 
     public ResponseEntity uploadModelParam(@RequestBody ModelParamApiRequest request){
-        return null;
+        try {
+            ModelParam modelParam = getModelParam(request);
+            return ResponseEntity.status(HttpStatus.OK).body(modelParam);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+    }
+
+    private ModelParam getModelParam(ModelParamApiRequest request) {
+        return ModelParam.builder()
+                .points(request.getPoints())
+                .radius(request.getRadius())
+                .build();
     }
 
 }
