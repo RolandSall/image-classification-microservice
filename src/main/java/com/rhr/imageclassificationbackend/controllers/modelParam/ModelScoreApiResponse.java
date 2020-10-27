@@ -7,7 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ModelParamApiRequest {
-    private int radius;
-    private int points;
+public class ModelScoreApiResponse {
+    private String score;
 }
