@@ -1,8 +1,8 @@
 package com.rhr.imageclassificationbackend.controllers.modelParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rhr.imageclassificationbackend.controllers.File.FileApiResponse;
 import com.rhr.imageclassificationbackend.model.KnnParam;
+import com.rhr.imageclassificationbackend.model.SVMModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,14 @@ import java.util.Arrays;
 public class ModelParameter {
 
     private final RestTemplate restTemplate;
-    public static final String TRAIN_COLAB_ENDPOINT = "http://84d92c768ae9.ngrok.io";
-    public static final String TRAIN_KNN_ENDPOINT = TRAIN_COLAB_ENDPOINT+"/Knn";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://127.0.0.1:5000/";
+    public static final String TRAIN_KNN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/Knn";
+    public static final String TRAIN_SVM_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/Svm";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
+    public static final String[] kernelPossibilities = {"linear", "poly", "rbf", "sigmoid"};
+    public static final ObjectMapper mapper = new ObjectMapper();
+    public static final HttpHeaders headers = new HttpHeaders();
 
     @Autowired
     public ModelParameter(RestTemplate restTemplate) {
@@ -28,9 +32,7 @@ public class ModelParameter {
     @PostMapping("/knn")
     public ResponseEntity trainKnnClassifier(@RequestBody KnnModelParamApiRequest request) {
         try {
-            if (isValidRequest(request)) {
-                ObjectMapper mapper = new ObjectMapper();
-                HttpHeaders headers = new HttpHeaders();
+            if (isKnnValidRequest(request)) {
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 KnnParam knnParam = buildJsonFromKNNRequest(request);
                 String json = mapper.writeValueAsString(knnParam);
@@ -45,7 +47,36 @@ public class ModelParameter {
         }
     }
 
-    private boolean isValidRequest(KnnModelParamApiRequest request) {
+
+    @PostMapping("/svm")
+    public ResponseEntity trainSVMClassifier(@RequestBody SVMModelParamApiRequest request) {
+        try {
+            if (isSVMValidRequest(request)) {
+                ObjectMapper mapper = new ObjectMapper();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                SVMModel svmModel = buildJsonFromSVMRequest(request);
+                String json = mapper.writeValueAsString(svmModel);
+                HttpEntity<String> entity = new HttpEntity<>(json, headers);
+                ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_SVM_ENDPOINT, entity, ModelScoreApiResponse.class);
+                return ResponseEntity.status(HttpStatus.OK).body(answer.getSVMScore());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request Parameters");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    private boolean isSVMValidRequest(SVMModelParamApiRequest request) {
+        if (Arrays.asList(kernelPossibilities).contains(request.getKernel()))
+            if (request.getTest_size() <= 1 && request.getTest_size() > 0)
+                return true;
+        return false;
+    }
+
+
+    private boolean isKnnValidRequest(KnnModelParamApiRequest request) {
         if (request.getTest_size() <= 1 && request.getTest_size() > 0 && request.getN_neighbours() < 100)
             if (Arrays.asList(weightsPossibilities).contains(request.getWeights()) &&
                     Arrays.asList(metricPossibilites).contains(request.getMetric()))
@@ -56,6 +87,18 @@ public class ModelParameter {
     private ModelScoreApiResponse buildResponse(String answer) {
         return new ModelScoreApiResponse().builder()
                 .KnnScore(answer)
+                .build();
+    }
+
+
+    private SVMModel buildJsonFromSVMRequest(SVMModelParamApiRequest request) {
+        return new SVMModel().builder()
+                .test_size(request.getTest_size())
+                .random_state(request.getRandom_state())
+                .C(request.getC())
+                .degree(request.getDegree())
+                .gamma(request.getGamma())
+                .kernel(request.getKernel())
                 .build();
     }
 

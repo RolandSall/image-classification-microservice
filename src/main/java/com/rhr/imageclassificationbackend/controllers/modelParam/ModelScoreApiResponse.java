@@ -11,4 +11,6 @@ import lombok.*;
 public class ModelScoreApiResponse {
     @JsonProperty("KnnScore")
     private String KnnScore;
+    @JsonProperty("SVMScore")
+    private String SVMScore;
 }
