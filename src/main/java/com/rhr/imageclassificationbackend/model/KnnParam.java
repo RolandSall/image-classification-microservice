@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class KnnParam {
+    private String classifierName;
     private double test_size;
     private int random_state;
     private int n_neighbours;

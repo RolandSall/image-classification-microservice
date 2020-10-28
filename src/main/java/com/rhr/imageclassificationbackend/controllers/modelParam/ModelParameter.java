@@ -15,9 +15,8 @@ import java.util.Arrays;
 public class ModelParameter {
 
     private final RestTemplate restTemplate;
-    public static final String TRAIN_COLAB_ENDPOINT = "http://127.0.0.1:5000/";
-    public static final String TRAIN_KNN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/Knn";
-    public static final String TRAIN_SVM_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/Svm";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://cbbfad3db5d3.ngrok.io/";
+    public static final String TRAIN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
     public static final String[] kernelPossibilities = {"linear", "poly", "rbf", "sigmoid"};
@@ -37,7 +36,7 @@ public class ModelParameter {
                 KnnParam knnParam = buildJsonFromKNNRequest(request);
                 String json = mapper.writeValueAsString(knnParam);
                 HttpEntity<String> entity = new HttpEntity<>(json, headers);
-                ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_KNN_ENDPOINT, entity, ModelScoreApiResponse.class);
+                ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_ENDPOINT, entity, ModelScoreApiResponse.class);
                 return ResponseEntity.status(HttpStatus.OK).body(answer.getKnnScore());
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request Parameters");
@@ -52,13 +51,11 @@ public class ModelParameter {
     public ResponseEntity trainSVMClassifier(@RequestBody SVMModelParamApiRequest request) {
         try {
             if (isSVMValidRequest(request)) {
-                ObjectMapper mapper = new ObjectMapper();
-                HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 SVMModel svmModel = buildJsonFromSVMRequest(request);
                 String json = mapper.writeValueAsString(svmModel);
                 HttpEntity<String> entity = new HttpEntity<>(json, headers);
-                ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_SVM_ENDPOINT, entity, ModelScoreApiResponse.class);
+                ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_ENDPOINT, entity, ModelScoreApiResponse.class);
                 return ResponseEntity.status(HttpStatus.OK).body(answer.getSVMScore());
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request Parameters");
@@ -93,6 +90,7 @@ public class ModelParameter {
 
     private SVMModel buildJsonFromSVMRequest(SVMModelParamApiRequest request) {
         return new SVMModel().builder()
+                .classifierName(request.getClassifierName())
                 .test_size(request.getTest_size())
                 .random_state(request.getRandom_state())
                 .C(request.getC())
@@ -104,6 +102,7 @@ public class ModelParameter {
 
     private KnnParam buildJsonFromKNNRequest(KnnModelParamApiRequest request) {
         return new KnnParam().builder()
+                .classifierName(request.getClassifierName())
                 .test_size(request.getTest_size())
                 .random_state(request.getRandom_state())
                 .n_neighbours(request.getN_neighbours())

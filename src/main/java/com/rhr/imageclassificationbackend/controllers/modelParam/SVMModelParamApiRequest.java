@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class SVMModelParamApiRequest {
+    private String classifierName;
     private double test_size;
     private int random_state;
     private int C;
