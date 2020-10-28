@@ -8,8 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class KnnModelParamApiRequest {
-    private int n_splits;
-    private int n_repeats;
+    private double test_size;
     private int random_state;
     private int n_neighbours;
     private String weights;

@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ModelScoreApiResponse {
-    @JsonProperty("score")
-    private String score;
+    @JsonProperty("KnnScore")
+    private String KnnScore;
 }
