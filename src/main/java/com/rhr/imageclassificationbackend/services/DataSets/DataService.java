@@ -24,7 +24,7 @@ public class DataService implements IDataSetService {
 
     @Override
     public DataSets findByDatasetId(String uuid) throws Exception {
-        return iDataServiceRepositoryDAO.findByDatasetId(uuid);
+           return iDataServiceRepositoryDAO.findByDatasetId(uuid);
     }
 
 

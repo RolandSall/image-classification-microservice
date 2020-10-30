@@ -1,6 +1,7 @@
 -- auto-generated definition
 create table datasets_features
 (
+    id binary(16) not null,
     dataset_id binary(16) not null,
     feature_id binary(16) not null,
     constraint

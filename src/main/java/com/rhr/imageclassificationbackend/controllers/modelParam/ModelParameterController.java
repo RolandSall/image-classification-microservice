@@ -65,6 +65,11 @@ public class ModelParameterController {
         }
     }
 
+    @GetMapping("/datasets/{dataSetUUID}/features")
+    public ResponseEntity checkDataSetFeatures(@PathVariable("dataSetUUID") String dataSetUUID){
+        return null;
+    }
+
     private boolean isSVMValidRequest(SVMModelParamApiRequest request) {
         if (Arrays.asList(kernelPossibilities).contains(request.getKernel()))
             if (request.getTest_size() <= 1 && request.getTest_size() > 0)
