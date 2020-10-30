@@ -13,12 +13,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/datasets")
-public class DataSet {
+public class DataSetController {
 
     private IDataSetService iDataSetService;
 
     @Autowired
-    public DataSet(IDataSetService iDataSetService) {
+    public DataSetController(IDataSetService iDataSetService) {
         this.iDataSetService = iDataSetService;
     }
 

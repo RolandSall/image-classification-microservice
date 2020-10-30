@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping("/params")
-public class ModelParameter {
+public class ModelParameterController {
 
     private final RestTemplate restTemplate;
     public static final String TRAIN_COLAB_ENDPOINT = "http://cbbfad3db5d3.ngrok.io/";
@@ -24,7 +24,7 @@ public class ModelParameter {
     public static final HttpHeaders headers = new HttpHeaders();
 
     @Autowired
-    public ModelParameter(RestTemplate restTemplate) {
+    public ModelParameterController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

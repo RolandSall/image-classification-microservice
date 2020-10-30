@@ -9,13 +9,13 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/upload/file")
-public class File {
+public class FileController {
 
     public static final String MODEL_PYTHON_SERVICE_ENDPOINT = "http://localhost:5000/predict";
     private final RestTemplate restTemplate;
 
     @Autowired
-    public File(RestTemplate restTemplate) {
+    public FileController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

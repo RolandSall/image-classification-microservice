@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class Login {
+public class LoginController {
 
     private UserService userService;
     private AdminService adminService;
 
     @Autowired
-    public Login(UserService userService, AdminService adminService) {
+    public LoginController(UserService userService, AdminService adminService) {
         this.userService = userService;
         this.adminService = adminService;
     }
