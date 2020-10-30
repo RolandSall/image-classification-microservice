@@ -23,9 +23,8 @@ public class User {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false)
     private UUID userId;
-
     private String firstName;
     private String lastName;
     private String phoneNumber;

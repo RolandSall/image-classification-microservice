@@ -15,7 +15,7 @@ import java.util.UUID;
 @ToString
 @Builder
 @Entity
-public class DataSets {
+public class Features {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -23,10 +23,17 @@ public class DataSets {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(nullable = false)
-    private UUID datasetId;
-    private String origin;
-    private String description;
+    private UUID featureId;
+    private String name;
 
-    @ManyToMany(mappedBy = "dataSetsArrayList")
-    private List<Features> featuresArrayList = new ArrayList<>();
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "datasets_features",
+            joinColumns = @JoinColumn(name = "dataset_id"),
+            inverseJoinColumns = @JoinColumn(name = "feature_id")
+    )
+    private List<DataSets> dataSetsArrayList = new ArrayList<>();
+
 }

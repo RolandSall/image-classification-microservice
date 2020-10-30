@@ -23,7 +23,7 @@ public class Admin {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false)
     private UUID adminId;
     private String username;
     private String password;
