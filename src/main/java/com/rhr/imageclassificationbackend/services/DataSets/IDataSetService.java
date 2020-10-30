@@ -1,10 +1,9 @@
 package com.rhr.imageclassificationbackend.services.DataSets;
-
-import com.rhr.imageclassificationbackend.controllers.DataSets.DataSet;
+import com.rhr.imageclassificationbackend.model.Datasets;
 
 import java.util.List;
 
 public interface IDataSetService {
 
-    List<DataSet> findAll() throws Exception;
+    List<Datasets> findAll() throws Exception;
 }
