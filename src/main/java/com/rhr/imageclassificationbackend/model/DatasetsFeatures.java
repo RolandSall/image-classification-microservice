@@ -16,7 +16,7 @@ import java.util.UUID;
 @ToString
 @Builder
 @Entity
-public class FeatureDataset {
+public class DatasetsFeatures {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -25,7 +25,7 @@ public class FeatureDataset {
     )
     @Column(nullable = false)
     private UUID id;
-    private UUID feature_id;
     private UUID dataset_id;
+    private UUID feature_id;
     private String name;
 }

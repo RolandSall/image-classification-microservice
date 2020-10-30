@@ -22,4 +22,10 @@ public class FeatureService implements IFeatureService {
         return iFeatureRepository.findAll();
     }
 
+    @Override
+    public Features findById(String uuid) throws Exception {
+        return iFeatureRepository.findByFeatureId(uuid);
+
+    }
+
 }

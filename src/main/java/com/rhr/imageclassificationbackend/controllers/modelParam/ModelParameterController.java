@@ -1,37 +1,53 @@
 package com.rhr.imageclassificationbackend.controllers.modelParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rhr.imageclassificationbackend.model.DatasetsFeatures;
 import com.rhr.imageclassificationbackend.model.KnnParam;
 import com.rhr.imageclassificationbackend.model.SVMModel;
+import com.rhr.imageclassificationbackend.services.DataSets.IDataSetService;
+import com.rhr.imageclassificationbackend.services.Feature.IFeatureService;
+import com.rhr.imageclassificationbackend.services.FeatureDatasetRepository.IFeatureDataSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/params")
 public class ModelParameterController {
 
     private final RestTemplate restTemplate;
+    public static final ObjectMapper mapper = new ObjectMapper();
+    public static final HttpHeaders headers = new HttpHeaders();
+    private IFeatureDataSetService iFeatureDataSetService;
+    private IFeatureService iFeatureService;
+    private IDataSetService iDataSetService;
     public static final String TRAIN_COLAB_ENDPOINT = "http://cbbfad3db5d3.ngrok.io/";
     public static final String TRAIN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
     public static final String[] kernelPossibilities = {"linear", "poly", "rbf", "sigmoid"};
-    public static final ObjectMapper mapper = new ObjectMapper();
-    public static final HttpHeaders headers = new HttpHeaders();
+
 
     @Autowired
-    public ModelParameterController(RestTemplate restTemplate) {
+    public ModelParameterController(RestTemplate restTemplate, IFeatureDataSetService iFeatureDataSetService, IFeatureService iFeatureService, IDataSetService iDataSetService) {
         this.restTemplate = restTemplate;
+        this.iFeatureDataSetService = iFeatureDataSetService;
+        this.iFeatureService = iFeatureService;
+        this.iDataSetService = iDataSetService;
     }
 
-    @PostMapping("/knn")
-    public ResponseEntity trainKnnClassifier(@RequestBody KnnModelParamApiRequest request) {
+    @PostMapping("/datasets/{dataSetUUID}/features/{featureUUID}/knn")
+    public ResponseEntity trainKnnClassifier(@PathVariable("dataSetUUID") String dataSetUUID,
+                                             @PathVariable("featureUUID") String featureUUID,
+                                             @RequestBody KnnModelParamApiRequest request) {
         try {
             if (isKnnValidRequest(request)) {
+                String featureName = getFeatureName(featureUUID);
+                String dataSetName = getDataSetDescription(dataSetUUID);
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 KnnParam knnParam = buildJsonFromKNNRequest(request);
                 String json = mapper.writeValueAsString(knnParam);
@@ -46,11 +62,23 @@ public class ModelParameterController {
         }
     }
 
+    private String getDataSetDescription(String dataSetUUID) throws Exception {
+        return iDataSetService.findByDatasetId(dataSetUUID).getDescription();
+    }
 
-    @PostMapping("/svm")
-    public ResponseEntity trainSVMClassifier(@RequestBody SVMModelParamApiRequest request) {
+    private String getFeatureName(String featureUUID) throws Exception {
+        return iFeatureService.findById(featureUUID).getName();
+    }
+
+
+    @PostMapping("/datasets/{dataSetUUID}/features/{featureUUID}/svm")
+    public ResponseEntity trainSVMClassifier(@PathVariable("dataSetUUID") String dataSetUUID,
+                                             @PathVariable("featureUUID") String featureUUID,
+                                             @RequestBody SVMModelParamApiRequest request) {
         try {
             if (isSVMValidRequest(request)) {
+                String featureName = getFeatureName(featureUUID);
+                String dataSetName = getDataSetDescription(dataSetUUID);
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 SVMModel svmModel = buildJsonFromSVMRequest(request);
                 String json = mapper.writeValueAsString(svmModel);
@@ -65,9 +93,15 @@ public class ModelParameterController {
         }
     }
 
-    @GetMapping("/datasets/{dataSetUUID}/features")
-    public ResponseEntity checkDataSetFeatures(@PathVariable("dataSetUUID") String dataSetUUID){
-        return null;
+    @GetMapping("/datasets/{dataSetUUID}/features/{featureUUID}")
+    public ResponseEntity checkDataSetFeatures(@PathVariable("dataSetUUID") String dataSetUUID) {
+        try {
+            List<DatasetsFeatures> DatasetsFeatures = iFeatureDataSetService.findAll(dataSetUUID);
+            return ResponseEntity.status(HttpStatus.OK).body(DatasetsFeatures);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
     }
 
     private boolean isSVMValidRequest(SVMModelParamApiRequest request) {

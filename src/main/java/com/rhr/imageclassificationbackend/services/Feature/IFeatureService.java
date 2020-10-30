@@ -10,4 +10,6 @@ public interface IFeatureService {
 
     List<Features> findAll() throws Exception;
 
+    Features findById(String uuid) throws Exception;
+
    }
