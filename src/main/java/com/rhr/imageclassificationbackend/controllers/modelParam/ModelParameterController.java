@@ -76,7 +76,7 @@ public class ModelParameterController {
                                              @PathVariable("featureUUID") String featureUUID,
                                              @RequestBody SVMModelParamApiRequest request) {
         try {
-            if (isSVMValidRequest(request)) {
+               if (isSVMValidRequest(request)) {
                 String featureName = getFeatureName(featureUUID);
                 String dataSetName = getDataSetDescription(dataSetUUID);
                 headers.setContentType(MediaType.APPLICATION_JSON);
@@ -84,7 +84,7 @@ public class ModelParameterController {
                 String json = mapper.writeValueAsString(svmModel);
                 HttpEntity<String> entity = new HttpEntity<>(json, headers);
                 ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_ENDPOINT, entity, ModelScoreApiResponse.class);
-                return ResponseEntity.status(HttpStatus.OK).body(answer.getSVMScore());
+                return ResponseEntity.status(HttpStatus.OK).body("answer.getSVMScore()");
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request Parameters");
             }
@@ -93,7 +93,7 @@ public class ModelParameterController {
         }
     }
 
-    @GetMapping("/datasets/{dataSetUUID}/features/{featureUUID}")
+    @GetMapping("/datasets/{dataSetUUID}/features")
     public ResponseEntity checkDataSetFeatures(@PathVariable("dataSetUUID") String dataSetUUID) {
         try {
             List<DatasetsFeatures> DatasetsFeatures = iFeatureDataSetService.findAll(dataSetUUID);
@@ -129,6 +129,8 @@ public class ModelParameterController {
 
     private SVMModel buildJsonFromSVMRequest(SVMModelParamApiRequest request) {
         return new SVMModel().builder()
+                .dataset(request.getDataset())
+                .feature(request.getFeature())
                 .classifierName(request.getClassifierName())
                 .test_size(request.getTest_size())
                 .random_state(request.getRandom_state())
@@ -141,6 +143,8 @@ public class ModelParameterController {
 
     private KnnParam buildJsonFromKNNRequest(KnnModelParamApiRequest request) {
         return new KnnParam().builder()
+                .dataset(request.getDataset())
+                .feature(request.getFeature())
                 .classifierName(request.getClassifierName())
                 .test_size(request.getTest_size())
                 .random_state(request.getRandom_state())

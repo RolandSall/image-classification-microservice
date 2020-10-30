@@ -8,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class KnnModelParamApiRequest {
+    private String feature;
+    private String dataset;
     private String classifierName;
     private double test_size;
     private int random_state;
