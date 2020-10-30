@@ -16,7 +16,7 @@ import java.util.UUID;
 @ToString
 @Builder
 @Entity
-public class Datasets {
+public class DataSets {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -25,6 +25,6 @@ public class Datasets {
     )
     @Column(updatable = false, nullable = false)
     private UUID datasetId;
-    private UUID origin;
+    private String origin;
     private String description;
 }
