@@ -1,4 +1,4 @@
-/*package com.rhr.imageclassificationbackend.controllers.DataSets;
+package com.rhr.imageclassificationbackend.controllers.DataSets;
 
 import com.rhr.imageclassificationbackend.services.DataSets.DataService;
 import com.rhr.imageclassificationbackend.services.DataSets.IDataSetService;
@@ -23,4 +23,4 @@ public class DataSet {
 
     }
 
-}*/
+}
