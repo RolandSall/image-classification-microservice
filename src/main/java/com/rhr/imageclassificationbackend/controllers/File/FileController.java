@@ -1,11 +1,13 @@
 package com.rhr.imageclassificationbackend.controllers.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/upload/file")
@@ -19,23 +21,26 @@ public class FileController {
         this.restTemplate = restTemplate;
     }
 
-    @PostMapping
-    public ResponseEntity uploadImage(@RequestBody FileApiRequest request){
+    @PostMapping()
+    public ResponseEntity uploadImageViaPath(@RequestParam("file") MultipartFile file){
         try {
-            String modifiedPath = getModifiedPath(request);
+            Path trgtPath = Paths.get("C:\\Users\\user\\IdeaProjects\\imageclassificationbackend\\testing.jpg");
+            file.transferTo(trgtPath);
+   /*       String modifiedPath = getModifiedPath(request);
             String url = MODEL_PYTHON_SERVICE_ENDPOINT;
             String requestJson = buildJsonFromRequest(modifiedPath);
             System.out.println(requestJson);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<>(requestJson,headers);
-            String answer = restTemplate.postForObject(url, entity, String.class);
-            FileApiResponse response = buildResponse(request.getPath(),answer);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            String answer = restTemplate.postForObject(url, entity, String.class);*/
+/*           FileApiResponse response = buildResponse(request.getPath(),answer);*/
+            return ResponseEntity.status(HttpStatus.OK).body("file.getA");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
 
 
     private String buildJsonFromRequest(String modifiedPath) {
