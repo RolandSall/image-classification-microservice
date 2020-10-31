@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Message {
-    private String message;
     private String output;
 }
 

@@ -1,4 +1,5 @@
 package com.rhr.imageclassificationbackend.controllers.File;
+import com.rhr.imageclassificationbackend.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.nio.file.Paths;
 public class FileController {
 
     public static final String MODEL_PYTHON_SERVICE_ENDPOINT = "http://localhost:5000/predict";
+    public static final String IMAGE_PATH = "C:\\Users\\user\\IdeaProjects\\imageclassificationbackend\\testing.jpg";
     private final RestTemplate restTemplate;
 
     @Autowired
@@ -24,32 +26,21 @@ public class FileController {
     @PostMapping()
     public ResponseEntity uploadImageViaPath(@RequestParam("file") MultipartFile file){
         try {
-            Path trgtPath = Paths.get("C:\\Users\\user\\IdeaProjects\\imageclassificationbackend\\testing.jpg");
+            Path trgtPath = Paths.get(IMAGE_PATH);
             file.transferTo(trgtPath);
-   /*       String modifiedPath = getModifiedPath(request);
-            String url = MODEL_PYTHON_SERVICE_ENDPOINT;
-            String requestJson = buildJsonFromRequest(modifiedPath);
-            System.out.println(requestJson);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> entity = new HttpEntity<>(requestJson,headers);
-            String answer = restTemplate.postForObject(url, entity, String.class);*/
-/*           FileApiResponse response = buildResponse(request.getPath(),answer);*/
-            return ResponseEntity.status(HttpStatus.OK).body("file.getA");
+            HttpEntity<String> entity = new HttpEntity<>(getModifiedPath(IMAGE_PATH),headers);
+            Message answer = restTemplate.postForObject(MODEL_PYTHON_SERVICE_ENDPOINT, entity, Message.class);
+               return ResponseEntity.status(HttpStatus.OK).body(answer.getOutput());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
 
-
-    private String buildJsonFromRequest(String modifiedPath) {
-        return "{\"path\": " + "\"" + modifiedPath + "\"" + "}";
-    }
-
-
-    private String getModifiedPath(FileApiRequest request) {
-        return request.getPath().replaceAll("\\\\", "\\\\\\\\");
+    private String getModifiedPath(String path) {
+        return path.replaceAll("\\\\", "\\\\\\\\");
     }
 
     private FileApiResponse buildResponse(String path, String output) {
