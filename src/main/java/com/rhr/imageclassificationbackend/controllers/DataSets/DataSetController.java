@@ -13,6 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/datasets")
+@CrossOrigin
 public class DataSetController {
 
     private IDataSetService iDataSetService;

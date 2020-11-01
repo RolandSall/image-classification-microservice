@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/params")
+@CrossOrigin
 public class ModelParameterController {
 
     private final RestTemplate restTemplate;
@@ -25,7 +26,7 @@ public class ModelParameterController {
     private IFeatureDataSetService iFeatureDataSetService;
     private IFeatureService iFeatureService;
     private IDataSetService iDataSetService;
-    public static final String TRAIN_COLAB_ENDPOINT = "http://320d25b79c14.ngrok.io";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://96a3d497ef16.ngrok.io";
     public static final String TRAIN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
@@ -40,7 +41,7 @@ public class ModelParameterController {
         this.iDataSetService = iDataSetService;
     }
 
-    @PostMapping("/datasets/{dataSetUUID}/features/{featureUUID}/knn")
+    @PostMapping("/datasets/{dataSetUUID}/features/{featureUUID}/Knn")
     public ResponseEntity trainKnnClassifier(@PathVariable("dataSetUUID") String dataSetUUID,
                                              @PathVariable("featureUUID") String featureUUID,
                                              @RequestBody KnnModelParamApiRequest request) {
@@ -71,7 +72,7 @@ public class ModelParameterController {
     }
 
 
-    @PostMapping("/datasets/{dataSetUUID}/features/{featureUUID}/svm")
+    @PostMapping("/datasets/{dataSetUUID}/features/{featureUUID}/Svm")
     public ResponseEntity trainSVMClassifier(@PathVariable("dataSetUUID") String dataSetUUID,
                                              @PathVariable("featureUUID") String featureUUID,
                                              @RequestBody SVMModelParamApiRequest request) {

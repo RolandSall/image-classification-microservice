@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/upload/file")
+@CrossOrigin
 public class FileController {
 
     public static final String MODEL_PYTHON_SERVICE_ENDPOINT = "http://localhost:5000/predict";
