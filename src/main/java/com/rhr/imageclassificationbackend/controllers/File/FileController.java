@@ -28,17 +28,21 @@ public class FileController {
     public ResponseEntity uploadImageViaPath(@RequestParam("imageFile")MultipartFile file,
                                              @RequestParam("imageName") String name){
         try {
-            System.out.println(name);
-            Path trgtPath = Paths.get(IMAGE_PATH+name+".jpg");
+
+            Path trgtPath = Paths.get(formulatePath(name));
             file.transferTo(trgtPath);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            //HttpEntity<String> entity = new HttpEntity<>(getModifiedPath(IMAGE_PATH),headers);
-            //Message answer = restTemplate.postForObject(MODEL_PYTHON_SERVICE_ENDPOINT, entity, Message.class);
-               return ResponseEntity.status(HttpStatus.OK).body("hola");
+            HttpEntity<String> entity = new HttpEntity<>(getModifiedPath(formulatePath(name)),headers);
+            Message answer = restTemplate.postForObject(MODEL_PYTHON_SERVICE_ENDPOINT, entity, Message.class);
+               return ResponseEntity.status(HttpStatus.OK).body(answer.getOutput());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    private String formulatePath(@RequestParam("imageName") String name) {
+        return IMAGE_PATH + name + ".jpg";
     }
 
 
