@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class FileController {
 
     public static final String MODEL_PYTHON_SERVICE_ENDPOINT = "http://localhost:5000/predict";
-    public static final String IMAGE_PATH = "C:\\Users\\user\\IdeaProjects\\imageclassificationbackend\\testing.jpg";
+    public static final String IMAGE_PATH = "C:\\Users\\user\\IdeaProjects\\imageclassificationbackend\\images\\";
     private final RestTemplate restTemplate;
 
     @Autowired
@@ -25,15 +25,17 @@ public class FileController {
     }
 
     @PostMapping()
-    public ResponseEntity uploadImageViaPath(@RequestParam("file") MultipartFile file){
+    public ResponseEntity uploadImageViaPath(@RequestParam("imageFile")MultipartFile file,
+                                             @RequestParam("imageName") String name){
         try {
-            Path trgtPath = Paths.get(IMAGE_PATH);
+            System.out.println(name);
+            Path trgtPath = Paths.get(IMAGE_PATH+name+".jpg");
             file.transferTo(trgtPath);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> entity = new HttpEntity<>(getModifiedPath(IMAGE_PATH),headers);
-            Message answer = restTemplate.postForObject(MODEL_PYTHON_SERVICE_ENDPOINT, entity, Message.class);
-               return ResponseEntity.status(HttpStatus.OK).body(answer.getOutput());
+            //HttpEntity<String> entity = new HttpEntity<>(getModifiedPath(IMAGE_PATH),headers);
+            //Message answer = restTemplate.postForObject(MODEL_PYTHON_SERVICE_ENDPOINT, entity, Message.class);
+               return ResponseEntity.status(HttpStatus.OK).body("hola");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
