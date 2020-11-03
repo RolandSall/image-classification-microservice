@@ -35,7 +35,7 @@ public class FileController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<>(getModifiedPath(formulatePath(name)),headers);
             Message answer = restTemplate.postForObject(MODEL_PYTHON_SERVICE_ENDPOINT, entity, Message.class);
-               return ResponseEntity.status(HttpStatus.OK).body(answer.getOutput());
+            return ResponseEntity.status(HttpStatus.OK).body(answer);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

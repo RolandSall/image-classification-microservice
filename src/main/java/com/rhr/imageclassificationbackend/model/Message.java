@@ -8,6 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Message {
-    private String output;
+    private String young;
+    private String middleAge;
+    private String old;
+
 }
 
