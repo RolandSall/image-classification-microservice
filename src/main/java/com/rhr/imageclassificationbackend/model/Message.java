@@ -11,6 +11,7 @@ public class Message {
     private String young;
     private String middleAge;
     private String old;
+    private String error;
 
 }
 
