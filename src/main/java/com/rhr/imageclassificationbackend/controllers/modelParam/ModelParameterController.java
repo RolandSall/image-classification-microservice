@@ -26,7 +26,7 @@ public class ModelParameterController {
     private IFeatureDataSetService iFeatureDataSetService;
     private IFeatureService iFeatureService;
     private IDataSetService iDataSetService;
-    public static final String TRAIN_COLAB_ENDPOINT = "http://96a3d497ef16.ngrok.io";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://7ce5aedf3dde.ngrok.io";
     public static final String TRAIN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
