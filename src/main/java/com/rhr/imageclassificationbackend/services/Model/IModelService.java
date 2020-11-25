@@ -10,4 +10,6 @@ public interface IModelService {
     Model saveModel(Model model);
 
     String deleteModelById(String modelId) throws Exception;
+
+    String updateModelById(String modelId, boolean visible) throws Exception;
 }

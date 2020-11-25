@@ -54,7 +54,17 @@ public class ModelController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
 
+    @PutMapping("/models/{modelId}")
+    public ResponseEntity updateModelVisibility(@RequestBody UpdateModelApiRequest request,
+                                                @PathVariable("modelId") String modelId) {
+        try {
+            String deletedModelById = iModelService.updateModelById(modelId,request.isVisible());
+            return ResponseEntity.status(HttpStatus.OK).body(deletedModelById);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     private Model getSavedModelFromApiRequest(SaveModelApiRequest request) {

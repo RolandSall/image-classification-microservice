@@ -31,10 +31,24 @@ public class ModelService implements IModelService {
     @Override
     public String deleteModelById(String modelId) throws Exception {
         Optional<Model> modelToBeDeleted = iModelRepositoryDAO.findById(Integer.parseInt(modelId));
-        if(modelToBeDeleted.isPresent()) {
+        if (modelToBeDeleted.isPresent()) {
             iModelRepositoryDAO.delete(modelToBeDeleted.get());
             return modelId;
-        } else{
+        } else {
+            throw new Exception("Model not found");
+        }
+
+    }
+
+    @Override
+    public String updateModelById(String modelId, boolean visible) throws Exception {
+        Optional<Model> modelToBeUpdatedOptional = iModelRepositoryDAO.findById(Integer.parseInt(modelId));
+        if (modelToBeUpdatedOptional.isPresent()) {
+            Model model = modelToBeUpdatedOptional.get();
+            model.setVisible(visible);
+            iModelRepositoryDAO.save(model);
+            return modelId;
+        } else {
             throw new Exception("Model not found");
         }
 
