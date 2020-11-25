@@ -60,8 +60,8 @@ public class ModelController {
     public ResponseEntity updateModelVisibility(@RequestBody UpdateModelApiRequest request,
                                                 @PathVariable("modelId") String modelId) {
         try {
-            String deletedModelById = iModelService.updateModelById(modelId,request.isVisible());
-            return ResponseEntity.status(HttpStatus.OK).body(deletedModelById);
+            String updateModelById = iModelService.updateModelById(modelId,request.isVisible());
+            return ResponseEntity.status(HttpStatus.OK).body(updateModelById);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
