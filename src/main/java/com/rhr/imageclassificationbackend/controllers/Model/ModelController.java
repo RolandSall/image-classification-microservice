@@ -1,13 +1,13 @@
 package com.rhr.imageclassificationbackend.controllers.Model;
 
-import com.rhr.imageclassificationbackend.controllers.DataSets.DataSetApiResponse;
-import com.rhr.imageclassificationbackend.model.DataSets;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rhr.imageclassificationbackend.controllers.modelParam.ModelScoreApiResponse;
 import com.rhr.imageclassificationbackend.model.Model;
 import com.rhr.imageclassificationbackend.services.Model.IModelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,16 @@ import java.util.List;
 public class ModelController {
 
     private IModelService iModelService;
+    private final RestTemplate restTemplate;
+    public static final String SAVE_KNN_ENDPOINT = "http://localhost:8000/saveKnn";
+    public static final String SAVE_SVM_ENDPOINT = "http://localhost:8000/saveSvm";
+    public static final ObjectMapper mapper = new ObjectMapper();
+    public static final HttpHeaders headers = new HttpHeaders();
 
     @Autowired
-    public ModelController(IModelService iModelService) {
+    public ModelController(IModelService iModelService, RestTemplate restTemplate) {
         this.iModelService = iModelService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/models")
@@ -37,9 +43,23 @@ public class ModelController {
     @PostMapping("/models/model")
     public ResponseEntity saveModel(@RequestBody SaveModelApiRequest request) {
         try {
-            Model model = iModelService.saveModel(getSavedModelFromApiRequest(request));
-            ModelApiResponse response = buildResponse(model);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            ModelSavingApiResponse modelSavingApiResponse;
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            String json = mapper.writeValueAsString(request.getClassifier());
+            HttpEntity<String> entity = new HttpEntity<>(json, headers);
+            if (request.getClassifier().equals("Knn")) {
+                modelSavingApiResponse = restTemplate.postForObject(SAVE_KNN_ENDPOINT, entity, ModelSavingApiResponse.class);
+            } else if (request.getClassifier().equals("Svm")) {
+                modelSavingApiResponse = restTemplate.postForObject(SAVE_SVM_ENDPOINT, entity, ModelSavingApiResponse.class);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No Model to be Saved");
+            }
+            if (!isModelTrained(modelSavingApiResponse)) {
+                Model model = iModelService.saveModel(getSavedModelFromApiRequest(request));
+                ModelApiResponse response = buildResponse(model);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No Model to be Saved");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -60,7 +80,7 @@ public class ModelController {
     public ResponseEntity updateModelVisibility(@RequestBody UpdateModelApiRequest request,
                                                 @PathVariable("modelId") String modelId) {
         try {
-            String updateModelById = iModelService.updateModelById(modelId,request.isVisible());
+            String updateModelById = iModelService.updateModelById(modelId, request.isVisible());
             return ResponseEntity.status(HttpStatus.OK).body(updateModelById);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -95,5 +115,9 @@ public class ModelController {
                 .visible(model.isVisible())
                 .build();
 
+    }
+
+    private boolean isModelTrained(ModelSavingApiResponse modelSavingApiResponse) {
+        return modelSavingApiResponse.getMessage().equals("No Model To Be Saved");
     }
 }

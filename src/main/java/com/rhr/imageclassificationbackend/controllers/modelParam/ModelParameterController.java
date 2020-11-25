@@ -26,7 +26,7 @@ public class ModelParameterController {
     private IFeatureDataSetService iFeatureDataSetService;
     private IFeatureService iFeatureService;
     private IDataSetService iDataSetService;
-    public static final String TRAIN_COLAB_ENDPOINT = "http://7ce5aedf3dde.ngrok.io";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://localhost:8000/";
     public static final String TRAIN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
@@ -62,6 +62,8 @@ public class ModelParameterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+
 
     private String getDataSetDescription(String dataSetUUID) throws Exception {
         return iDataSetService.findByDatasetId(dataSetUUID).getDescription();
