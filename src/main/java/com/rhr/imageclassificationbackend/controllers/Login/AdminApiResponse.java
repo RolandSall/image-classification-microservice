@@ -12,6 +12,7 @@ import java.util.UUID;
 public class AdminApiResponse {
     private UUID adminId;
     private String username;
-    private String password;
+    private String firstName;
+    private String lastName;
     private String email;
 }

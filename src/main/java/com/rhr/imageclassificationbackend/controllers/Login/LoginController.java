@@ -91,7 +91,8 @@ public class LoginController {
         return new AdminApiResponse().builder()
                 .adminId(admin.getAdminId())
                 .username(admin.getUsername())
-                .password(admin.getPassword())
+                .lastName(admin.getLastName())
+                .firstName(admin.getFirstName())
                 .email(admin.getEmail())
                 .build();
 
