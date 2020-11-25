@@ -23,7 +23,7 @@ public class ModelController {
         this.iModelService = iModelService;
     }
 
-    @GetMapping("/datasets")
+    @GetMapping("/models")
     public ResponseEntity findAllModels() {
         try {
             List<Model> listOfModels = iModelService.findAllModels();
