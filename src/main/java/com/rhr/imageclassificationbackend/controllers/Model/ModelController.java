@@ -46,7 +46,8 @@ public class ModelController {
         try {
             ModelSavingApiResponse modelSavingApiResponse;
             headers.setContentType(MediaType.APPLICATION_JSON);
-            String json = mapper.writeValueAsString(request.getClassifier());
+            String json = mapper.writeValueAsString(request.getName());
+            System.out.println(request.getName());
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
             if (request.getClassifier().equals("Knn")) {
                 modelSavingApiResponse = restTemplate.postForObject(SAVE_KNN_ENDPOINT, entity, ModelSavingApiResponse.class);
