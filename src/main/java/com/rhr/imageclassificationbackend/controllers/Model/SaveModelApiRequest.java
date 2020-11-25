@@ -8,11 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class ModelApiResponse {
-    private int modelId;
+public class SaveModelApiRequest {
     private String owner;
     private String dataset;
     private String classifier;
     private String feature;
-    private boolean visible;
+
 }

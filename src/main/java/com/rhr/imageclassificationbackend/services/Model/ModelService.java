@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ModelService implements IModelService {
@@ -20,5 +21,22 @@ public class ModelService implements IModelService {
     @Override
     public List<Model> findAllModels() {
         return iModelRepositoryDAO.findAll();
+    }
+
+    @Override
+    public Model saveModel(Model model) {
+        return iModelRepositoryDAO.save(model);
+    }
+
+    @Override
+    public String deleteModelById(String modelId) throws Exception {
+        Optional<Model> modelToBeDeleted = iModelRepositoryDAO.findById(Integer.parseInt(modelId));
+        if(modelToBeDeleted.isPresent()) {
+            iModelRepositoryDAO.delete(modelToBeDeleted.get());
+            return modelId;
+        } else{
+            throw new Exception("Model not found");
+        }
+
     }
 }

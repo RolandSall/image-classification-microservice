@@ -22,4 +22,5 @@ public class Model {
     private String dataset;
     private String classifier;
     private String feature;
+    private boolean visible;
 }
