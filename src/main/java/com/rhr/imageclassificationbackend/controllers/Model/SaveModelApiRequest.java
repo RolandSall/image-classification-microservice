@@ -13,6 +13,7 @@ public class SaveModelApiRequest {
     private String dataset;
     private String classifier;
     private String feature;
+    private String name;
 
 
 }

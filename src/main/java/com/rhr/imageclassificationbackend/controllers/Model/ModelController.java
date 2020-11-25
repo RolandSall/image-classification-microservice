@@ -93,6 +93,7 @@ public class ModelController {
                 .feature(request.getFeature())
                 .dataset(request.getDataset())
                 .owner(request.getOwner())
+                .name(request.getName())
                 .visible(false)
                 .build();
     }
@@ -112,6 +113,7 @@ public class ModelController {
                 .feature(model.getFeature())
                 .dataset(model.getDataset())
                 .owner(model.getOwner())
+                .name(model.getName())
                 .visible(model.isVisible())
                 .build();
 
