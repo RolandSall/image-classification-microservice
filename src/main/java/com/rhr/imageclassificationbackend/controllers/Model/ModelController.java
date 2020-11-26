@@ -1,6 +1,5 @@
 package com.rhr.imageclassificationbackend.controllers.Model;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rhr.imageclassificationbackend.controllers.modelParam.ModelScoreApiResponse;
 import com.rhr.imageclassificationbackend.model.Model;
 import com.rhr.imageclassificationbackend.services.Model.IModelService;
 import org.springframework.beans.factory.annotation.Autowired;
