@@ -1,5 +1,4 @@
 package com.rhr.imageclassificationbackend.controllers.Model;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rhr.imageclassificationbackend.controllers.modelParam.ModelScoreApiResponse;
 import com.rhr.imageclassificationbackend.model.Model;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +42,7 @@ public class ModelController {
     @PostMapping("/models/model")
     public ResponseEntity saveModel(@RequestBody SaveModelApiRequest request) {
         try {
+            System.out.println(request.getAccuracy());
             ModelSavingApiResponse modelSavingApiResponse;
             headers.setContentType(MediaType.APPLICATION_JSON);
             String json = mapper.writeValueAsString(request.getName());
@@ -96,6 +95,7 @@ public class ModelController {
                 .dataset(request.getDataset())
                 .owner(request.getOwner())
                 .name(request.getName())
+                .accuracy(request.getAccuracy())
                 .visible(false)
                 .build();
     }
@@ -116,6 +116,7 @@ public class ModelController {
                 .dataset(model.getDataset())
                 .owner(model.getOwner())
                 .name(model.getName())
+                .accuracy(model.getAccuracy())
                 .visible(model.isVisible())
                 .build();
 

@@ -15,5 +15,6 @@ public class ModelApiResponse {
     private String classifier;
     private String feature;
     private String name;
+    private String accuracy;
     private boolean visible;
 }

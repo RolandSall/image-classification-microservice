@@ -24,4 +24,5 @@ public class Model {
     private String feature;
     private String name;
     private boolean visible;
+    private String accuracy;
 }

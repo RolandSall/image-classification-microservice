@@ -6,6 +6,7 @@ create table if not exists model
     name varchar(255) null,
     classifier varchar(255) null,
     feature varchar(255) null,
+    accuracy varchar(255) null,
     visible   bit          not null
 );
 

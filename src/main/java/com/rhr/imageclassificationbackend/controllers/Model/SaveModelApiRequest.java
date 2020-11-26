@@ -14,6 +14,7 @@ public class SaveModelApiRequest {
     private String classifier;
     private String feature;
     private String name;
+    private String accuracy;
 
 
 }
