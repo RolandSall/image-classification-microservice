@@ -5,22 +5,22 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=imageclassification
-    ports:
-    - [3306:3306]
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+
     volumes:
-    - imageclassificationbackend:/var/lib/mysql
+      - imageclassificationbackend:/var/lib/mysql
 
   spring-boot:
     image: imageclassification-main-microservice
     ports:
       [8080:8080]
-
     build:
       context: ./
       dockerfile: Dockerfile
 
     depends_on:
-        - mysql-standalone
+      - mysql-standalone
 
 volumes:
   imageclassificationbackend:
