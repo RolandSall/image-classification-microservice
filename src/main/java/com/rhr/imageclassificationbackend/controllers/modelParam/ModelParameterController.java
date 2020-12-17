@@ -1,6 +1,7 @@
 package com.rhr.imageclassificationbackend.controllers.modelParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rhr.imageclassificationbackend.model.ANNModel;
 import com.rhr.imageclassificationbackend.model.DatasetsFeatures;
 import com.rhr.imageclassificationbackend.model.KnnParam;
 import com.rhr.imageclassificationbackend.model.SVMModel;
@@ -12,8 +13,10 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/params")
@@ -26,8 +29,9 @@ public class ModelParameterController {
     private IFeatureDataSetService iFeatureDataSetService;
     private IFeatureService iFeatureService;
     private IDataSetService iDataSetService;
-    public static final String TRAIN_COLAB_ENDPOINT = "http://localhost:8000/";
-    public static final String TRAIN_ENDPOINT = TRAIN_COLAB_ENDPOINT + "/train";
+    public static final String TRAIN_LOCALHOST_ENDPOINT = "http://localhost:8000/";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://dc28a262ed11.ngrok.io";
+    public static final String TRAIN_ENDPOINT = TRAIN_LOCALHOST_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
     public static final String[] kernelPossibilities = {"linear", "poly", "rbf", "sigmoid"};
@@ -50,7 +54,7 @@ public class ModelParameterController {
                 String featureName = getFeatureName(featureUUID);
                 String dataSetName = getDataSetDescription(dataSetUUID);
                 headers.setContentType(MediaType.APPLICATION_JSON);
-                KnnParam knnParam = buildJsonFromKNNRequest(request,featureName,dataSetName);
+                KnnParam knnParam = buildJsonFromKNNRequest(request, featureName, dataSetName);
                 String json = mapper.writeValueAsString(knnParam);
                 HttpEntity<String> entity = new HttpEntity<>(json, headers);
                 ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_ENDPOINT, entity, ModelScoreApiResponse.class);
@@ -64,26 +68,16 @@ public class ModelParameterController {
     }
 
 
-
-    private String getDataSetDescription(String dataSetUUID) throws Exception {
-        return iDataSetService.findByDatasetId(dataSetUUID).getDescription();
-    }
-
-    private String getFeatureName(String featureUUID) throws Exception {
-        return iFeatureService.findById(featureUUID).getName();
-    }
-
-
     @PostMapping("/datasets/{dataSetUUID}/features/{featureUUID}/Svm")
     public ResponseEntity trainSVMClassifier(@PathVariable("dataSetUUID") String dataSetUUID,
                                              @PathVariable("featureUUID") String featureUUID,
                                              @RequestBody SVMModelParamApiRequest request) {
         try {
-               if (isSVMValidRequest(request)) {
+            if (isSVMValidRequest(request)) {
                 String featureName = getFeatureName(featureUUID);
                 String dataSetName = getDataSetDescription(dataSetUUID);
                 headers.setContentType(MediaType.APPLICATION_JSON);
-                SVMModel svmModel = buildJsonFromSVMRequest(request,featureName,dataSetName);
+                SVMModel svmModel = buildJsonFromSVMRequest(request, featureName, dataSetName);
                 String json = mapper.writeValueAsString(svmModel);
                 HttpEntity<String> entity = new HttpEntity<>(json, headers);
                 ModelScoreApiResponse answer = restTemplate.postForObject(TRAIN_ENDPOINT, entity, ModelScoreApiResponse.class);
@@ -94,6 +88,39 @@ public class ModelParameterController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/trainAnn")
+    public ResponseEntity trainANN(@RequestBody ANNModelApiRequest request) {
+        try {
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            ANNModel annModel = buildJsonFromANNRequest(request);
+            String json = mapper.writeValueAsString(annModel);
+            HttpEntity<String> entity = new HttpEntity<>(json, headers);
+            ANNModelApiResponse answer = restTemplate.postForObject(TRAIN_COLAB_ENDPOINT+"/ANN", entity, ANNModelApiResponse.class);
+            return ResponseEntity.status(HttpStatus.OK).body(buildListResponse(answer));
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+    private ANNModelResponse buildListResponse(ANNModelApiResponse answer) {
+        ArrayList accList = new ArrayList(getAccList(answer));
+        ArrayList lostList = new ArrayList(getLossList(answer));
+        return new ANNModelResponse().builder()
+                .accuracyList(accList)
+                .lossList(lostList)
+                .build();
+    }
+
+    private List<String> getLossList(ANNModelApiResponse answer) {
+        return Arrays.stream(((String) answer.getLoss()).substring(1,((String) answer.getLoss()).length()-1).split(", ")).collect(Collectors.toList());
+    }
+
+    private List<String> getAccList(ANNModelApiResponse answer) {
+        return Arrays.stream(((String) answer.getAccuracy()).substring(1,((String) answer.getAccuracy()).length()-1).split(", ")).collect(Collectors.toList());
     }
 
     @GetMapping("/datasets/{dataSetUUID}/features")
@@ -157,4 +184,16 @@ public class ModelParameterController {
                 .build();
     }
 
+
+    private String getDataSetDescription(String dataSetUUID) throws Exception {
+        return iDataSetService.findByDatasetId(dataSetUUID).getDescription();
+    }
+
+    private String getFeatureName(String featureUUID) throws Exception {
+        return iFeatureService.findById(featureUUID).getName();
+    }
+
+    private ANNModel buildJsonFromANNRequest(ANNModelApiRequest request) {
+        return new ANNModel().builder().build();
+    }
 }
