@@ -26,3 +26,24 @@ INSERT INTO datasets_features (id, dataset_id, feature_id) VALUES (UNHEX(REPLACE
 INSERT INTO datasets_features (id, dataset_id, feature_id) VALUES (UNHEX(REPLACE('2d1bdad1-9b02-4227-af5f-2d9e78e313cf','-','')),
                                                                    UNHEX(REPLACE('5c97e5b5-05cd-47ad-afb5-7a72af45c56c','-','')),
                                                                UNHEX(REPLACE('66f6c0bf-f9c1-4f44-b043-64e694ff83e9','-','')));
+
+
+
+
+INSERT INTO datasets_features (id, dataset_id, feature_id) VALUES (UNHEX(REPLACE('1cc74d54-6684-4658-91ed-a083629dfc3a','-','')),
+                                                                   UNHEX(REPLACE('80094f60-8e69-4b12-bef2-1e15d8b1a5fb','-','')),
+                                                                   UNHEX(REPLACE('2ff05e16-a8ad-4c4c-8a69-08ce4e9da5d9','-','')));
+
+
+
+INSERT INTO datasets_features (id, dataset_id, feature_id) VALUES (UNHEX(REPLACE('6bb6ca0c-d117-4432-ae3f-a4e2881aff4e','-','')),
+                                                                   UNHEX(REPLACE('80094f60-8e69-4b12-bef2-1e15d8b1a5fb','-','')),
+                                                                   UNHEX(REPLACE('66f6c0bf-f9c1-4f44-b043-64e694ff83e9','-','')));
+
+
+INSERT INTO datasets_features (id, dataset_id, feature_id) VALUES (UNHEX(REPLACE('e75f7191-9a8e-400a-aee3-21b232151be2','-','')),
+                                                                   UNHEX(REPLACE('80094f60-8e69-4b12-bef2-1e15d8b1a5fb','-','')),
+                                                                   UNHEX(REPLACE('1da60cc1-234f-4a0c-b5a6-db383526f3e3','-','')));
+
+
+
