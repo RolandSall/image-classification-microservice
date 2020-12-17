@@ -30,7 +30,7 @@ public class ModelParameterController {
     private IFeatureService iFeatureService;
     private IDataSetService iDataSetService;
     public static final String TRAIN_LOCALHOST_ENDPOINT = "http://localhost:8000/";
-    public static final String TRAIN_COLAB_ENDPOINT = "http://dc28a262ed11.ngrok.io";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://7b777b5ad899.ngrok.io";
     public static final String TRAIN_ENDPOINT = TRAIN_LOCALHOST_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
@@ -194,6 +194,8 @@ public class ModelParameterController {
     }
 
     private ANNModel buildJsonFromANNRequest(ANNModelApiRequest request) {
-        return new ANNModel().builder().build();
+        return new ANNModel().builder()
+                .epochs(request.getEpochs())
+                .build();
     }
 }
