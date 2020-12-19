@@ -41,8 +41,9 @@ public class ModelController {
     @PostMapping("/models/model")
     public ResponseEntity saveModel(@RequestBody SaveModelApiRequest request) {
         try {
+
             System.out.println(request.getAccuracy());
-            ModelSavingApiResponse modelSavingApiResponse;
+            ModelSavingApiResponse modelSavingApiResponse = new ModelSavingApiResponse();
             headers.setContentType(MediaType.APPLICATION_JSON);
             String json = mapper.writeValueAsString(request.getName());
             System.out.println(request.getName());
@@ -51,7 +52,14 @@ public class ModelController {
                 modelSavingApiResponse = restTemplate.postForObject(SAVE_KNN_ENDPOINT, entity, ModelSavingApiResponse.class);
             } else if (request.getClassifier().equals("Svm")) {
                 modelSavingApiResponse = restTemplate.postForObject(SAVE_SVM_ENDPOINT, entity, ModelSavingApiResponse.class);
-            } else {
+
+            } else if(request.getClassifier().equalsIgnoreCase("Cnn")){
+                Model model = iModelService.saveModel(getSavedModelCNNFromApiRequest(request));
+                ModelApiResponse response = buildResponse(model);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+
+            else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No Model to be Saved");
             }
             if (!isModelTrained(modelSavingApiResponse)) {
@@ -91,6 +99,19 @@ public class ModelController {
         return new Model().builder()
                 .classifier(request.getClassifier())
                 .feature(request.getFeature())
+                .dataset(request.getDataset())
+                .owner(request.getOwner())
+                .name(request.getName())
+                .accuracy(request.getAccuracy())
+                .visible(false)
+                .build();
+    }
+
+
+    private Model getSavedModelCNNFromApiRequest(SaveModelApiRequest request) {
+        return new Model().builder()
+                .classifier(request.getClassifier())
+                .feature("1da60cc1-234f-4a0c-b5a6-db383526f3e3")
                 .dataset(request.getDataset())
                 .owner(request.getOwner())
                 .name(request.getName())

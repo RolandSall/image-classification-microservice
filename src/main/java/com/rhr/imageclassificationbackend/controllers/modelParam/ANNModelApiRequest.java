@@ -9,4 +9,5 @@ import lombok.*;
 @Builder
 public class ANNModelApiRequest {
     private int epochs;
+    private String classifierName;
 }

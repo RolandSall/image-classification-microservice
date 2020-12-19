@@ -30,7 +30,7 @@ public class ModelParameterController {
     private IFeatureService iFeatureService;
     private IDataSetService iDataSetService;
     public static final String TRAIN_LOCALHOST_ENDPOINT = "http://localhost:8000/";
-    public static final String TRAIN_COLAB_ENDPOINT = "http://7b777b5ad899.ngrok.io";
+    public static final String TRAIN_COLAB_ENDPOINT = "http://0cd651d2cb5b.ngrok.io/ANN";
     public static final String TRAIN_ENDPOINT = TRAIN_LOCALHOST_ENDPOINT + "/train";
     public static final String[] weightsPossibilities = {"uniform", "distance"};
     public static final String[] metricPossibilites = {"euclidean", "manhattan", "minkowski"};
@@ -97,7 +97,7 @@ public class ModelParameterController {
             ANNModel annModel = buildJsonFromANNRequest(request);
             String json = mapper.writeValueAsString(annModel);
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            ANNModelApiResponse answer = restTemplate.postForObject(TRAIN_COLAB_ENDPOINT+"/ANN", entity, ANNModelApiResponse.class);
+            ANNModelApiResponse answer = restTemplate.postForObject(TRAIN_COLAB_ENDPOINT, entity, ANNModelApiResponse.class);
             return ResponseEntity.status(HttpStatus.OK).body(buildListResponse(answer));
         } catch (Exception e) {
 
@@ -109,9 +109,13 @@ public class ModelParameterController {
     private ANNModelResponse buildListResponse(ANNModelApiResponse answer) {
         ArrayList accList = new ArrayList(getAccList(answer));
         ArrayList lostList = new ArrayList(getLossList(answer));
+        ArrayList val_accuracyList = new ArrayList(getValAcc(answer));
+        ArrayList val_lossList = new ArrayList(getValLoss(answer));
         return new ANNModelResponse().builder()
                 .accuracyList(accList)
                 .lossList(lostList)
+                .val_accuracy(val_accuracyList)
+                .val_loss(val_lossList)
                 .build();
     }
 
@@ -121,6 +125,14 @@ public class ModelParameterController {
 
     private List<String> getAccList(ANNModelApiResponse answer) {
         return Arrays.stream(((String) answer.getAccuracy()).substring(1,((String) answer.getAccuracy()).length()-1).split(", ")).collect(Collectors.toList());
+    }
+
+    private List<String> getValAcc(ANNModelApiResponse answer) {
+        return Arrays.stream(((String) answer.getVal_accuracy()).substring(1,((String) answer.getVal_accuracy()).length()-1).split(", ")).collect(Collectors.toList());
+    }
+
+    private List<String> getValLoss(ANNModelApiResponse answer) {
+        return Arrays.stream(((String) answer.getVal_loss()).substring(1,((String) answer.getVal_loss()).length()-1).split(", ")).collect(Collectors.toList());
     }
 
     @GetMapping("/datasets/{dataSetUUID}/features")
@@ -195,6 +207,7 @@ public class ModelParameterController {
 
     private ANNModel buildJsonFromANNRequest(ANNModelApiRequest request) {
         return new ANNModel().builder()
+                .classifierName(request.getClassifierName())
                 .epochs(request.getEpochs())
                 .build();
     }

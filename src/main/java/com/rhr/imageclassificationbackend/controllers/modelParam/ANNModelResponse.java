@@ -13,5 +13,7 @@ import java.util.ArrayList;
 public class ANNModelResponse {
     private ArrayList accuracyList;
     private ArrayList lossList;
+    private ArrayList val_loss;
+    private ArrayList val_accuracy;
 
 }

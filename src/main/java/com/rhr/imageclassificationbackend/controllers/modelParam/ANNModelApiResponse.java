@@ -14,5 +14,9 @@ public class ANNModelApiResponse {
     private Object accuracy;
     @JsonProperty("loss")
     private Object loss;
+    @JsonProperty("val_loss")
+    private Object val_loss;
+    @JsonProperty("val_accuracy")
+    private Object val_accuracy;
 
 }

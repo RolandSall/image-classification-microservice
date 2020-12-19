@@ -23,7 +23,14 @@ public class Message {
     private String weightFF;
     private String weightMF;
     private String weightM;
+    private String youngAnn;
+    private String middleAnn;
+    private String weightAnn;
+    private String oldAnn;
     private String error;
+    private String clf1;
+    private String clf2;
+    private String clf3;
 
 }
 
