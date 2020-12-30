@@ -4,9 +4,11 @@ This is a Spring Boot Microservice that aims to ensure valid communication betwe
 
 # Project Goal
 
-Ability To Provide an Image from the user side to predict its age ranging from Young - Middle Age - Old.
-Ability To Train classifiers on sport  KNN - SVM - ANN and save the desired models to be used in predication later on by the User.
-Ability to Build you own custom Ensemble from the the models that you choose or Use the original Optimized Model.
+  Ability To Provide an Image from the user side to predict its age ranging from Young - Middle Age - Old.
+
+  Ability To Train classifiers on sport  KNN - SVM - ANN and save the desired models to be used in predication later on by the User.
+
+  Ability to Build you own custom Ensemble from the the models that you choose or Use the original Optimized Model.
 
 
 # Note
